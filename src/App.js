@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
-  Switch,
+  Navigate,
   Route,
-  Redirect,
+  Routes,
+  useLocation,
 } from 'react-router-dom';
 import { get, isNil } from 'lodash';
 
@@ -19,37 +20,34 @@ function App() {
     roomID: null,
   });
 
+  const GameRoute = ({ auth, setAuth }) => {
+    const location = useLocation();
+    const roomID = location.pathname.split('/').pop(); // Extract roomID from the pathname
+
+    console.log(roomID, 'roomID');
+
+    // redirect if the roomID in auth doesn't match, or no credentials
+    return roomID &&
+      auth.roomID === roomID &&
+      !isNil(auth.credentials) &&
+      !isNil(auth.playerID) ? (
+      <Game auth={auth} setAuth={setAuth} />
+    ) : (
+      <Navigate to="/" state={{ from: location, roomID }} />
+    );
+  };
+
   return (
     <div className="App">
       <Router>
-        <Switch>
+        <Routes>
           <Route
             path="/game/:id"
-            render={({ location, match }) => {
-              const roomID = get(match, 'params.id');
-              // redirect if the roomID in auth doesn't match, or no credentials
-              return roomID &&
-                auth.roomID === roomID &&
-                !isNil(auth.credentials) &&
-                !isNil(auth.playerID) ? (
-                <Game auth={auth} setAuth={setAuth} />
-              ) : (
-                <Redirect
-                  to={{
-                    pathname: '/',
-                    state: { from: location, roomID },
-                  }}
-                />
-              );
-            }}
+            element={<GameRoute auth={auth} setAuth={setAuth} />}
           />
-          <Route path="/qrcode/:id">
-            <QrCode />
-          </Route>
-          <Route path="/">
-            <Lobby setAuth={setAuth} />
-          </Route>
-        </Switch>
+          <Route path="/qrcode/:id" element={<QrCode />} />
+          <Route path="/" element={<Lobby setAuth={setAuth} />} />
+        </Routes>
       </Router>
     </div>
   );

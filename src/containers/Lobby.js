@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Form } from 'react-bootstrap';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { get } from 'lodash';
 import { joinRoom, getRoom, createRoom } from '../lib/endpoints';
 import Header from '../components/Header';
@@ -28,7 +28,7 @@ export default function Lobby({ setAuth }) {
   const location = useLocation();
   const prefilledRoomID = get(location, 'state.roomID');
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [room, setRoom] = useState(prefilledRoomID || '');
   const [joinMode, setJoinMode] = useState(true);
@@ -74,7 +74,7 @@ export default function Lobby({ setAuth }) {
       // save auth and go to room
       setAuth(auth);
       setLoading(false);
-      history.push(`/game/${room.roomID}`);
+      navigate(`/game/${room.roomID}`);
     } catch (error) {
       setLoading(false);
       setError(ERROR_MESSAGE[error.message]);
