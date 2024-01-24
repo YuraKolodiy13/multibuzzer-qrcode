@@ -11,7 +11,7 @@ const gameport = process.env.PORT || 4001;
 const url = protocol + '//' + hostname + (port ? ':' + port : '');
 const localUrl = `${protocol}//${hostname}:${gameport}`;
 
-const LOBBY_SERVER =  process.env.REACT_APP_API_BASE_URL;
+const LOBBY_SERVER = process.env.REACT_APP_API_BASE_URL;
 export const GAME_SERVER = process.env.REACT_APP_API_BASE_URL;
 
 export async function getRoom(roomId) {
