@@ -2,9 +2,9 @@
   "name": "multibuzzer",
   "version": "0.1.0",
   "scripts": {
-    "start": "node -r esm src/server.js",
-    "dev": "concurrently \"PORT=4000 npm run client\" \"PORT=4001 npm run start\"",
-    "client": "react-scripts start",
+    "server": "node -r esm src/server.js",
+    "start": "react-scripts start",
+    "dev": "concurrently \"PORT=4000 npm run start\" \"PORT=4001 npm run server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
