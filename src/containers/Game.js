@@ -34,7 +34,9 @@ export default function Game({ auth, setAuth }) {
   const App = Client({
     game: Buzzer,
     board: Table,
-    multiplayer: SocketIO({ server: 'https://multibuzzer-qrcode.vercel.app/api/' }),
+    multiplayer: SocketIO({
+      server: 'https://multibuzzer-qrcode.vercel.app/api/',
+    }),
     debug: false,
     loading: loadingComponent,
   });
