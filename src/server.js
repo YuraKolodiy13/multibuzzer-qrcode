@@ -28,6 +28,10 @@ function randomString(length, chars) {
 }
 
 app.use(async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', '*');
+  await next();
+});
+app.use(async (ctx, next) => {
   await next();
   ctx.response.set('Allow', 'GET, POST, PUT, DELETE');
 });
@@ -43,9 +47,9 @@ app.use(
     errorMessage: 'Too many requests',
     id: (ctx) => ctx.ip,
     max: 25,
-    whitelist: (ctx) => {
-      return !ctx.path.includes(`games/${Buzzer.name}`);
-    },
+    // whitelist: (ctx) => {
+    //   return !ctx.path.includes(`games/${Buzzer.name}`);
+    // },
   })
 );
 
