@@ -1,5 +1,6 @@
 {
   "name": "multibuzzer",
+  "homepage": ".",
   "version": "0.1.0",
   "scripts": {
     "server": "node -r esm api/server.js",
