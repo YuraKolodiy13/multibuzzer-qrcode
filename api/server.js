@@ -10,14 +10,14 @@ const server = Server({ games: [Buzzer], generateCredentials: () => uuidv4() });
 const PORT = process.env.PORT || 4001;
 const { app } = server;
 
-// const FRONTEND_PATH = path.join(__dirname, '../build');
-// app.use(
-//   serve(FRONTEND_PATH, {
-//     setHeaders: (res) => {
-//       res.setHeader('Access-Control-Allow-Origin', '*');
-//     },
-//   })
-// );
+const FRONTEND_PATH = path.join(__dirname, '../build');
+app.use(
+  serve(FRONTEND_PATH, {
+    setHeaders: (res) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+    },
+  })
+);
 
 function randomString(length, chars) {
   let result = '';
@@ -53,10 +53,10 @@ server.run(
     // rewrite rule for catching unresolved routes and redirecting to index.html
     // for client-side routing
     server.app.use(async (ctx, next) => {
-      // await serve(FRONTEND_PATH)(
-      //   Object.assign(ctx, { path: 'index.html' }),
-      //   next
-      // );
+      await serve(FRONTEND_PATH)(
+        Object.assign(ctx, { path: 'index.html' }),
+        next
+      );
     });
   }
 );
