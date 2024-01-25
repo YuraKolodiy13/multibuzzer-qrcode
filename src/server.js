@@ -39,7 +39,9 @@ app.use(
     id: (ctx) => ctx.ip,
     max: 25,
     whitelist: (ctx) => {
-      return !ctx.path.includes(`games/${Buzzer.name}`);
+      console.log(ctx.path, 'ctx.path');
+      console.log(FRONTEND_PATH, 'FRONTEND_PATH');
+      return !ctx.path.includes(`api/games/${Buzzer.name}`);
     },
   })
 );
