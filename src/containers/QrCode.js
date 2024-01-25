@@ -2,9 +2,11 @@ import React from 'react';
 import { QRCode } from 'react-qrcode-logo';
 
 const QrCode = () => {
-
   console.log(window.location.href, 'window.location.href');
-  console.log(window.location.href.replace('qrcode', 'game'), 'window.location.href.replace(\'qrcode\', \'game\')');
+  console.log(
+    window.location.href.replace('qrcode', 'game'),
+    "window.location.href.replace('qrcode', 'game')"
+  );
 
   return (
     <div
