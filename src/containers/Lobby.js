@@ -138,7 +138,6 @@ export default function Lobby({ setAuth }) {
           }}
         />
       </Form.Group>
-
       <Form.Group controlId="name">
         <Form.Label>Your name</Form.Label>
         <Form.Control
