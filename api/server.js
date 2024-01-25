@@ -10,14 +10,14 @@ const server = Server({ games: [Buzzer], generateCredentials: () => uuidv4() });
 const PORT = process.env.PORT || 4001;
 const { app } = server;
 
-const FRONTEND_PATH = path.join(__dirname, '../build');
-app.use(
-  serve(FRONTEND_PATH, {
-    setHeaders: (res) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-    },
-  })
-);
+// const FRONTEND_PATH = path.join(__dirname, '../build');
+// app.use(
+//   serve(FRONTEND_PATH, {
+//     setHeaders: (res) => {
+//       res.setHeader('Access-Control-Allow-Origin', '*');
+//     },
+//   })
+// );
 
 function randomString(length, chars) {
   let result = '';
@@ -44,6 +44,25 @@ app.use(
   })
 );
 
+// URL rewriting middleware
+app.use(async (ctx, next) => {
+  // Define your rewrite rules here
+  const rewriteRules = [
+    { from: /^\/api\/(.*)/, to: '/$1' },
+    // Add more rules as needed
+  ];
+
+  for (const rule of rewriteRules) {
+    const match = ctx.path.match(rule.from);
+    if (match) {
+      ctx.path = rule.to.replace(/\$(\d+)/g, (_, index) => match[index]);
+      break;
+    }
+  }
+
+  await next();
+});
+
 server.run(
   {
     port: PORT,
@@ -52,11 +71,11 @@ server.run(
   () => {
     // rewrite rule for catching unresolved routes and redirecting to index.html
     // for client-side routing
-    server.app.use(async (ctx, next) => {
-      await serve(FRONTEND_PATH)(
-        Object.assign(ctx, { path: 'index.html' }),
-        next
-      );
-    });
+    // server.app.use(async (ctx, next) => {
+    //   await serve(FRONTEND_PATH)(
+    //     Object.assign(ctx, { path: 'index.html' }),
+    //     next
+    //   );
+    // });
   }
 );
