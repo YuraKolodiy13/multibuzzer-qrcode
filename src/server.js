@@ -11,13 +11,13 @@ const PORT = process.env.PORT || 4001;
 const { app } = server;
 
 const FRONTEND_PATH = path.join(__dirname, '../build');
-app.use(
-  serve(FRONTEND_PATH, {
-    setHeaders: (res) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-    },
-  })
-);
+// app.use(
+//   // serve(FRONTEND_PATH, {
+//   //   setHeaders: (res) => {
+//   //     res.setHeader('Access-Control-Allow-Origin', '*');
+//   //   },
+//   // })
+// );
 
 function randomString(length, chars) {
   let result = '';
@@ -26,6 +26,11 @@ function randomString(length, chars) {
     result += chars[Math.floor(Math.random() * chars.length)];
   return result;
 }
+
+app.use(async (ctx, next) => {
+  await next();
+  ctx.response.set('Allow', 'GET, POST, PUT, DELETE');
+});
 
 // rate limiter
 const db = new Map();
@@ -39,9 +44,7 @@ app.use(
     id: (ctx) => ctx.ip,
     max: 25,
     whitelist: (ctx) => {
-      console.log(ctx.path, 'ctx.path');
-      console.log(FRONTEND_PATH, 'FRONTEND_PATH');
-      return !ctx.path.includes(`api/games/${Buzzer.name}`);
+      return !ctx.path.includes(`games/${Buzzer.name}`);
     },
   })
 );
@@ -51,14 +54,14 @@ server.run(
     port: PORT,
     lobbyConfig: { uuid: () => randomString(6, 'ABCDEFGHJKLMNPQRSTUVWXYZ') },
   },
-  () => {
-    // rewrite rule for catching unresolved routes and redirecting to index.html
-    // for client-side routing
-    server.app.use(async (ctx, next) => {
-      await serve(FRONTEND_PATH)(
-        Object.assign(ctx, { path: 'index.html' }),
-        next
-      );
-    });
-  }
+  // () => {
+  //   // rewrite rule for catching unresolved routes and redirecting to index.html
+  //   // for client-side routing
+  //   // server.app.use(async (ctx, next) => {
+  //   //   await serve(FRONTEND_PATH)(
+  //   //     Object.assign(ctx, { path: 'index.html' }),
+  //   //     next
+  //   //   );
+  //   // });
+  // }
 );
